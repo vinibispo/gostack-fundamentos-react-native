@@ -7,7 +7,7 @@ import {
   Container,
   ProductContainer,
   ProductList,
-  Product,
+  ProductItem,
   ProductImage,
   ProductTitleContainer,
   ProductTitle,
@@ -39,23 +39,39 @@ const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
 
   function handleIncrement(id: string): void {
-    // TODO
+    increment(id);
   }
 
   function handleDecrement(id: string): void {
-    // TODO
+    decrement(id);
   }
 
   const cartTotal = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const { price } = products.reduce(
+      (accumulator, product) => {
+        accumulator.price += product.price * product.quantity;
+        return accumulator;
+      },
+      {
+        price: 0,
+      },
+    );
 
-    return formatValue(0);
+    return formatValue(price);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const { quantity } = products.reduce(
+      (accumulator, product) => {
+        accumulator.quantity += product.quantity;
+        return accumulator;
+      },
+      {
+        quantity: 0,
+      },
+    );
 
-    return 0;
+    return quantity;
   }, [products]);
 
   return (
@@ -69,7 +85,7 @@ const Cart: React.FC = () => {
             height: 80,
           }}
           renderItem={({ item }: { item: Product }) => (
-            <Product>
+            <ProductItem>
               <ProductImage source={{ uri: item.image_url }} />
               <ProductTitleContainer>
                 <ProductTitle>{item.title}</ProductTitle>
@@ -101,7 +117,7 @@ const Cart: React.FC = () => {
                   <FeatherIcon name="minus" color="#E83F5B" size={16} />
                 </ActionButton>
               </ActionContainer>
-            </Product>
+            </ProductItem>
           )}
         />
       </ProductContainer>
